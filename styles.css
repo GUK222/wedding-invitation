@@ -248,6 +248,14 @@ button {
   animation: pulse 1.4s ease-in-out infinite;
 }
 
+body.is-location-active .music-toggle,
+body.is-location-active .auto-toggle,
+body.is-location-active .speed-toggle {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .loading-screen {
   position: fixed;
   inset: 0;
@@ -348,7 +356,13 @@ button {
 
 @media (max-width: 420px) {
   .map-actions {
-    grid-template-columns: 1fr;
-    padding: 14px 20px 28px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 0 14px;
+  }
+
+  .map-actions a,
+  .map-actions button {
+    min-height: 40px;
+    font-size: 12px;
   }
 }
