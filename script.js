@@ -5,6 +5,13 @@ const musicToggle = document.getElementById("musicToggle");
 const copyAddress = document.getElementById("copyAddress");
 const loadingScreen = document.getElementById("loadingScreen");
 const firstImage = document.querySelector(".invite img");
+const autoToggle = document.getElementById("autoToggle");
+const sheets = [...document.querySelectorAll(".sheet")];
+
+let autoPlay = true;
+let autoTimer = null;
+let currentPage = 0;
+let userPauseTimer = null;
 
 document.body.classList.add("is-loading");
 
@@ -54,6 +61,7 @@ function pauseMusic() {
 async function beginInvite() {
   await playMusic();
   musicGate.classList.add("is-hidden");
+  startAutoPlay();
 }
 
 ["pointerdown", "touchstart", "click"].forEach((eventName) => {
@@ -89,3 +97,67 @@ copyAddress.addEventListener("click", async () => {
 });
 
 preloadImage(firstImage);
+
+function nearestPageIndex() {
+  let best = 0;
+  let bestDistance = Infinity;
+  sheets.forEach((sheet, index) => {
+    const distance = Math.abs(sheet.getBoundingClientRect().top);
+    if (distance < bestDistance) {
+      best = index;
+      bestDistance = distance;
+    }
+  });
+  return best;
+}
+
+function goToPage(index) {
+  currentPage = (index + sheets.length) % sheets.length;
+  sheets[currentPage].scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function startAutoPlay() {
+  clearInterval(autoTimer);
+  if (!autoPlay || !sheets.length) {
+    return;
+  }
+
+  autoToggle.classList.add("is-playing");
+  autoToggle.setAttribute("aria-label", "Pause auto page play");
+  autoToggle.querySelector("b").textContent = "Auto";
+  autoTimer = setInterval(() => {
+    currentPage = nearestPageIndex();
+    goToPage(currentPage + 1);
+  }, 5200);
+}
+
+function stopAutoPlay() {
+  clearInterval(autoTimer);
+  autoTimer = null;
+  autoToggle.classList.remove("is-playing");
+  autoToggle.setAttribute("aria-label", "Start auto page play");
+  autoToggle.querySelector("b").textContent = "Manual";
+}
+
+function pauseAutoBriefly() {
+  if (!autoPlay) {
+    return;
+  }
+
+  clearInterval(autoTimer);
+  clearTimeout(userPauseTimer);
+  userPauseTimer = setTimeout(startAutoPlay, 8000);
+}
+
+autoToggle.addEventListener("click", () => {
+  autoPlay = !autoPlay;
+  if (autoPlay) {
+    startAutoPlay();
+  } else {
+    stopAutoPlay();
+  }
+});
+
+["wheel", "touchstart", "pointerdown", "keydown"].forEach((eventName) => {
+  window.addEventListener(eventName, pauseAutoBriefly, { passive: true });
+});
