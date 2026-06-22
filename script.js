@@ -22,6 +22,7 @@ const speeds = [
 ];
 
 document.body.classList.add("is-loading");
+music.load();
 
 function hideLoading() {
   loadingScreen.classList.add("is-hidden");
@@ -76,14 +77,19 @@ function openInvite() {
   startAutoPlay();
 }
 
-async function beginInvite() {
+function beginInvite(event) {
+  event?.preventDefault();
+  event?.stopPropagation();
+
+  const playAttempt = playMusic();
   openInvite();
-  await playMusic();
+  return playAttempt;
 }
 
+startInvite.addEventListener("pointerdown", beginInvite);
+startInvite.addEventListener("touchstart", beginInvite, { passive: false });
 startInvite.addEventListener("click", beginInvite);
 musicGate.addEventListener("click", beginInvite);
-musicGate.addEventListener("touchend", beginInvite, { passive: true });
 setTimeout(openInvite, 3200);
 
 musicToggle.addEventListener("click", async () => {
