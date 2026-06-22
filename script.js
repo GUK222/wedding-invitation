@@ -11,18 +11,18 @@ const speedToggle = document.getElementById("speedToggle");
 const sheets = [...document.querySelectorAll(".sheet")];
 const renderedImages = [...document.querySelectorAll(".sheet img")];
 const imageSources = [
-  "assets/final3-page-01.webp?v=18",
-  "assets/final3-page-02.webp?v=18",
-  "assets/final3-page-03.webp?v=18",
-  "assets/final3-page-04.webp?v=18",
-  "assets/final3-page-05.webp?v=18",
-  "assets/final3-page-06.webp?v=18",
-  "assets/final3-page-07.webp?v=18",
-  "assets/final3-page-08.webp?v=18",
-  "assets/final3-page-09.webp?v=18",
+  "assets/final3-page-01.webp?v=19",
+  "assets/final3-page-02.webp?v=19",
+  "assets/final3-page-03.webp?v=19",
+  "assets/final3-page-04.webp?v=19",
+  "assets/final3-page-05.webp?v=19",
+  "assets/final3-page-06.webp?v=19",
+  "assets/final3-page-07.webp?v=19",
+  "assets/final3-page-08.webp?v=19",
+  "assets/final3-page-09.webp?v=19",
 ];
 const warmImageSources = imageSources.slice(1);
-const musicSource = "assets/wedding-music-fast.mp3?v=18";
+const musicSource = "assets/wedding-music-fast.mp3?v=19";
 
 let autoPlay = true;
 let autoTimer = null;
@@ -71,28 +71,21 @@ function markAssetReady() {
 }
 
 function loadAudioAsset() {
-  return new Promise((resolve) => {
-    let settled = false;
-    const finish = () => {
-      if (settled) {
-        return;
+  return fetch(musicSource, { cache: "force-cache" })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Music failed to load");
       }
-
-      settled = true;
+      return response.blob();
+    })
+    .then((blob) => {
+      music.src = URL.createObjectURL(blob);
+      music.load();
       markAssetReady();
-      resolve();
-    };
-
-    if (music.readyState >= 2) {
-      finish();
-      return;
-    }
-
-    music.addEventListener("loadeddata", finish, { once: true });
-    music.addEventListener("canplay", finish, { once: true });
-    music.addEventListener("error", finish, { once: true });
-    setTimeout(finish, 4500);
-  });
+    })
+    .catch(() => {
+      markAssetReady();
+    });
 }
 
 function decodeRenderedImage(img) {
@@ -122,21 +115,13 @@ function decodeRenderedImage(img) {
 
 async function preloadInvitationAssets() {
   setLoadingProgress(0);
-  const timeout = new Promise((resolve) => setTimeout(resolve, 18000));
-  const assets = Promise.all([
+  await Promise.all([
     ...renderedImages.map(decodeRenderedImage),
     loadAudioAsset(),
   ]);
-  await Promise.race([assets, timeout]);
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   hideLoading();
 }
-
-setTimeout(() => {
-  if (!loadingFinished) {
-    hideLoading();
-  }
-}, 19000);
 
 function warmImages(index = 0) {
   if (index >= warmImageSources.length) {
@@ -300,4 +285,3 @@ speedToggle.addEventListener("click", () => {
 ["wheel", "touchstart", "pointerdown", "keydown"].forEach((eventName) => {
   window.addEventListener(eventName, pauseAutoBriefly, { passive: true });
 });
-
