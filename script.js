@@ -11,18 +11,18 @@ const speedToggle = document.getElementById("speedToggle");
 const sheets = [...document.querySelectorAll(".sheet")];
 const renderedImages = [...document.querySelectorAll(".sheet img")];
 const imageSources = [
-  "assets/final3-page-01.webp?v=17",
-  "assets/final3-page-02.webp?v=17",
-  "assets/final3-page-03.webp?v=17",
-  "assets/final3-page-04.webp?v=17",
-  "assets/final3-page-05.webp?v=17",
-  "assets/final3-page-06.webp?v=17",
-  "assets/final3-page-07.webp?v=17",
-  "assets/final3-page-08.webp?v=17",
-  "assets/final3-page-09.webp?v=17",
+  "assets/final3-page-01.webp?v=18",
+  "assets/final3-page-02.webp?v=18",
+  "assets/final3-page-03.webp?v=18",
+  "assets/final3-page-04.webp?v=18",
+  "assets/final3-page-05.webp?v=18",
+  "assets/final3-page-06.webp?v=18",
+  "assets/final3-page-07.webp?v=18",
+  "assets/final3-page-08.webp?v=18",
+  "assets/final3-page-09.webp?v=18",
 ];
 const warmImageSources = imageSources.slice(1);
-const musicSource = "assets/wedding-music-fast.mp3?v=17";
+const musicSource = "assets/wedding-music-fast.mp3?v=18";
 
 let autoPlay = true;
 let autoTimer = null;
