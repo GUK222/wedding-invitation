@@ -31,6 +31,13 @@ body.is-loading {
   overflow: hidden;
 }
 
+body:not(.is-ready) .invite,
+body:not(.is-ready) .music-toggle,
+body:not(.is-ready) .auto-toggle,
+body:not(.is-ready) .speed-toggle {
+  visibility: hidden;
+}
+
 button,
 a {
   font: inherit;
@@ -58,10 +65,9 @@ button {
   margin: 0;
   background: var(--paper);
   width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 0;
   display: grid;
-  align-content: center;
+  align-content: start;
   justify-items: center;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -81,7 +87,7 @@ button {
 }
 
 .location-sheet {
-  align-content: center;
+  align-content: start;
   padding: 0 0 max(18px, env(safe-area-inset-bottom));
 }
 
