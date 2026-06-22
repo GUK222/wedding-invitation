@@ -11,18 +11,18 @@ const speedToggle = document.getElementById("speedToggle");
 const sheets = [...document.querySelectorAll(".sheet")];
 const renderedImages = [...document.querySelectorAll(".sheet img")];
 const imageSources = [
-  "assets/final3-page-01.webp?v=14",
-  "assets/final3-page-02.webp?v=14",
-  "assets/final3-page-03.webp?v=14",
-  "assets/final3-page-04.webp?v=14",
-  "assets/final3-page-05.webp?v=14",
-  "assets/final3-page-06.webp?v=14",
-  "assets/final3-page-07.webp?v=14",
-  "assets/final3-page-08.webp?v=14",
-  "assets/final3-page-09.webp?v=14",
+  "assets/final3-page-01.webp?v=15",
+  "assets/final3-page-02.webp?v=15",
+  "assets/final3-page-03.webp?v=15",
+  "assets/final3-page-04.webp?v=15",
+  "assets/final3-page-05.webp?v=15",
+  "assets/final3-page-06.webp?v=15",
+  "assets/final3-page-07.webp?v=15",
+  "assets/final3-page-08.webp?v=15",
+  "assets/final3-page-09.webp?v=15",
 ];
 const warmImageSources = imageSources.slice(1);
-const musicSource = "assets/wedding-music-fast.mp3?v=14";
+const musicSource = "assets/wedding-music-fast.mp3?v=15";
 
 let autoPlay = true;
 let autoTimer = null;
@@ -33,7 +33,7 @@ let inviteStarted = false;
 let inviteOpening = false;
 let loadedAssets = 0;
 let loadingFinished = false;
-const totalAssets = imageSources.length + renderedImages.length + 1;
+const totalAssets = renderedImages.length + 1;
 const speeds = [
   { label: "\uC18D\uB3C4 \uBE60\uB984", delay: 3000 },
   { label: "\uC18D\uB3C4 \uBCF4\uD1B5", delay: 4500 },
@@ -45,16 +45,24 @@ music.preload = "auto";
 music.load();
 
 function hideLoading() {
+  if (loadingFinished) {
+    return;
+  }
+
   loadingFinished = true;
   setLoadingProgress(totalAssets);
   loadingScreen.classList.add("is-hidden");
   document.body.classList.remove("is-loading");
+  document.body.classList.add("is-ready");
 }
 
 function setLoadingProgress(done) {
   const percent = Math.min(100, Math.round((done / totalAssets) * 100));
   loadingText.textContent = `청첩장을 준비하는 중 ${percent}%`;
   loadingBar.style.width = `${percent}%`;
+  if (percent >= 100) {
+    setTimeout(hideLoading, 250);
+  }
 }
 
 function markAssetReady() {
@@ -62,49 +70,29 @@ function markAssetReady() {
   setLoadingProgress(loadedAssets);
 }
 
-async function warmAudio() {
-  try {
-    const response = await fetch(musicSource, { cache: "force-cache" });
-    const blob = await response.blob();
-    if (!music.paused) {
-      return;
-    }
-
-    music.src = URL.createObjectURL(blob);
-    music.load();
-  } catch {
-    music.load();
-  }
-}
-
-function resetMusicForGesture() {
-  if (!music.src) {
-    music.src = musicSource;
-  }
-
-  try {
-    music.currentTime = 0;
-  } catch {
-    // Metadata may not be ready in some mobile in-app browsers.
-  }
-  music.load();
-}
-
-function loadImageAsset(src) {
+function loadAudioAsset() {
   return new Promise((resolve) => {
-    const img = new Image();
-    img.decoding = "async";
-    img.onload = img.onerror = () => {
+    let settled = false;
+    const finish = () => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
       markAssetReady();
       resolve();
     };
-    img.src = src;
-  });
-}
 
-async function loadAudioAsset() {
-  await warmAudio();
-  markAssetReady();
+    if (music.readyState >= 2) {
+      finish();
+      return;
+    }
+
+    music.addEventListener("loadeddata", finish, { once: true });
+    music.addEventListener("canplay", finish, { once: true });
+    music.addEventListener("error", finish, { once: true });
+    setTimeout(finish, 4500);
+  });
 }
 
 function decodeRenderedImage(img) {
@@ -134,9 +122,8 @@ function decodeRenderedImage(img) {
 
 async function preloadInvitationAssets() {
   setLoadingProgress(0);
-  const timeout = new Promise((resolve) => setTimeout(resolve, 15000));
+  const timeout = new Promise((resolve) => setTimeout(resolve, 18000));
   const assets = Promise.all([
-    ...imageSources.map(loadImageAsset),
     ...renderedImages.map(decodeRenderedImage),
     loadAudioAsset(),
   ]);
@@ -144,6 +131,12 @@ async function preloadInvitationAssets() {
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   hideLoading();
 }
+
+setTimeout(() => {
+  if (!loadingFinished) {
+    hideLoading();
+  }
+}, 19000);
 
 function warmImages(index = 0) {
   if (index >= warmImageSources.length) {
@@ -167,7 +160,7 @@ async function playMusic() {
     return true;
   } catch {
     musicToggle.classList.remove("is-playing");
-    musicToggle.querySelector("b").textContent = "\uC74C\uC545";
+    musicToggle.querySelector("b").textContent = "\uC74C\uC545 \uCF1C\uAE30";
     return false;
   }
 }
@@ -185,7 +178,6 @@ function openInvite() {
   }
 
   inviteStarted = true;
-  stopAutoPlay();
   goToPage(0, "auto");
   musicGate.classList.add("is-hidden");
   warmImages();
@@ -200,7 +192,6 @@ async function beginInvite(event) {
   }
 
   inviteOpening = true;
-  resetMusicForGesture();
   const playAttempt = playMusic();
   openInvite();
   return playAttempt;
