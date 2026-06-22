@@ -239,11 +239,12 @@ button {
   z-index: 70;
   display: grid;
   place-items: center;
-  align-content: center;
-  gap: 14px;
-  background: var(--paper);
+  padding: 28px;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(255, 255, 255, 0.92) 0 18%, rgba(251, 247, 242, 0.9) 46%, rgba(239, 231, 223, 0.86) 100%),
+    var(--paper);
   color: var(--green-dark);
-  transition: opacity 260ms ease, visibility 260ms ease;
+  transition: opacity 360ms ease, visibility 360ms ease;
 }
 
 .loading-screen.is-hidden {
@@ -252,10 +253,47 @@ button {
   pointer-events: none;
 }
 
+.loading-card {
+  width: min(300px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 13px;
+  padding: 30px 26px 28px;
+  border: 1px solid rgba(184, 154, 98, 0.28);
+  border-radius: 22px;
+  background: rgba(255, 252, 248, 0.72);
+  box-shadow: 0 22px 60px rgba(91, 76, 58, 0.13);
+  backdrop-filter: blur(10px);
+}
+
+.loading-card strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--gold);
+}
+
 .loading-screen p {
   margin: 0;
   font-size: 13px;
   color: rgba(63, 88, 66, 0.76);
+}
+
+.loading-bar {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(184, 154, 98, 0.18);
+}
+
+.loading-bar span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gold), var(--green));
+  transition: width 180ms ease;
 }
 
 .loading-mark {
