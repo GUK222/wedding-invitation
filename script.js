@@ -14,6 +14,7 @@ let autoTimer = null;
 let currentPage = 0;
 let userPauseTimer = null;
 let speedIndex = 0;
+let inviteStarted = false;
 const speeds = [
   { label: "\uC18D\uB3C4 \uBE60\uB984", delay: 3000 },
   { label: "\uC18D\uB3C4 \uBCF4\uD1B5", delay: 4500 },
@@ -65,22 +66,25 @@ function pauseMusic() {
   musicToggle.querySelector("b").textContent = "\uC74C\uC545";
 }
 
-async function beginInvite() {
-  await playMusic();
+function openInvite() {
+  if (inviteStarted) {
+    return;
+  }
+
+  inviteStarted = true;
   musicGate.classList.add("is-hidden");
   startAutoPlay();
 }
 
-["pointerdown", "touchstart", "click"].forEach((eventName) => {
-  startInvite.addEventListener(
-    eventName,
-    (event) => {
-      event.preventDefault();
-      beginInvite();
-    },
-    { once: true }
-  );
-});
+async function beginInvite() {
+  openInvite();
+  await playMusic();
+}
+
+startInvite.addEventListener("click", beginInvite);
+musicGate.addEventListener("click", beginInvite);
+musicGate.addEventListener("touchend", beginInvite, { passive: true });
+setTimeout(openInvite, 3200);
 
 musicToggle.addEventListener("click", async () => {
   if (music.paused) {
