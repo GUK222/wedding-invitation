@@ -11,18 +11,18 @@ const speedToggle = document.getElementById("speedToggle");
 const sheets = [...document.querySelectorAll(".sheet")];
 const renderedImages = [...document.querySelectorAll(".sheet img")];
 const imageSources = [
-  "assets/final3-page-01.webp?v=19",
-  "assets/final3-page-02.webp?v=19",
-  "assets/final3-page-03.webp?v=19",
-  "assets/final3-page-04.webp?v=19",
-  "assets/final3-page-05.webp?v=19",
-  "assets/final3-page-06.webp?v=19",
-  "assets/final3-page-07.webp?v=19",
-  "assets/final3-page-08.webp?v=19",
-  "assets/final3-page-09.webp?v=19",
+  "assets/final3-page-01.webp?v=20",
+  "assets/final3-page-02.webp?v=20",
+  "assets/final3-page-03.webp?v=20",
+  "assets/final3-page-04.webp?v=20",
+  "assets/final3-page-05.webp?v=20",
+  "assets/final3-page-06.webp?v=20",
+  "assets/final3-page-07.webp?v=20",
+  "assets/final3-page-08.webp?v=20",
+  "assets/final3-page-09.webp?v=20",
 ];
 const warmImageSources = imageSources.slice(1);
-const musicSource = "assets/wedding-music-fast.mp3?v=19";
+const musicSource = "assets/wedding-music-fast.mp3?v=20";
 
 let autoPlay = true;
 let autoTimer = null;
@@ -223,9 +223,14 @@ function nearestPageIndex() {
   return best;
 }
 
+function updateActivePageState(index = nearestPageIndex()) {
+  document.body.classList.toggle("is-location-active", index === sheets.length - 1);
+}
+
 function goToPage(index, behavior = "smooth") {
   currentPage = (index + sheets.length) % sheets.length;
   sheets[currentPage].scrollIntoView({ behavior, block: "start" });
+  updateActivePageState(currentPage);
 }
 
 function startAutoPlay() {
@@ -285,3 +290,7 @@ speedToggle.addEventListener("click", () => {
 ["wheel", "touchstart", "pointerdown", "keydown"].forEach((eventName) => {
   window.addEventListener(eventName, pauseAutoBriefly, { passive: true });
 });
+
+window.addEventListener("scroll", () => {
+  requestAnimationFrame(() => updateActivePageState());
+}, { passive: true });
