@@ -34,6 +34,7 @@ let inviteOpening = false;
 let loadedAssets = 0;
 let loadingFinished = false;
 const totalAssets = renderedImages.length + 1;
+const firstPageDelay = 1800;
 const speeds = [
   { label: "\uC18D\uB3C4 \uBE60\uB984", delay: 3000 },
   { label: "\uC18D\uB3C4 \uBCF4\uD1B5", delay: 4500 },
@@ -166,7 +167,10 @@ function openInvite() {
   goToPage(0, "auto");
   musicGate.classList.add("is-hidden");
   warmImages();
-  setTimeout(startAutoPlay, 8000);
+  setTimeout(() => {
+    goToPage(1);
+    startAutoPlay();
+  }, firstPageDelay);
 }
 
 async function beginInvite(event) {
