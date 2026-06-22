@@ -8,6 +8,16 @@ const firstImage = document.querySelector(".invite img");
 const autoToggle = document.getElementById("autoToggle");
 const speedToggle = document.getElementById("speedToggle");
 const sheets = [...document.querySelectorAll(".sheet")];
+const warmImageSources = [
+  "assets/final3-page-02.webp?v=11",
+  "assets/final3-page-03.webp?v=11",
+  "assets/final3-page-04.webp?v=11",
+  "assets/final3-page-05.webp?v=11",
+  "assets/final3-page-06.webp?v=11",
+  "assets/final3-page-07.webp?v=11",
+  "assets/final3-page-08.webp?v=11",
+  "assets/final3-page-09.webp?v=11",
+];
 
 let autoPlay = true;
 let autoTimer = null;
@@ -22,6 +32,7 @@ const speeds = [
 ];
 
 document.body.classList.add("is-loading");
+music.preload = "auto";
 music.load();
 
 function hideLoading() {
@@ -42,7 +53,33 @@ function preloadImage(img) {
 
   img.addEventListener("load", hideLoading, { once: true });
   img.addEventListener("error", hideLoading, { once: true });
-  setTimeout(hideLoading, 2400);
+  setTimeout(hideLoading, 1200);
+}
+
+async function warmAudio() {
+  try {
+    const response = await fetch("assets/wedding-music-fast.mp3?v=11", { cache: "force-cache" });
+    const blob = await response.blob();
+    if (!music.paused) {
+      return;
+    }
+
+    music.src = URL.createObjectURL(blob);
+    music.load();
+  } catch {
+    music.load();
+  }
+}
+
+function warmImages(index = 0) {
+  if (index >= warmImageSources.length) {
+    return;
+  }
+
+  const img = new Image();
+  img.decoding = "async";
+  img.onload = img.onerror = () => setTimeout(() => warmImages(index + 1), 90);
+  img.src = warmImageSources[index];
 }
 
 async function playMusic() {
@@ -74,6 +111,7 @@ function openInvite() {
 
   inviteStarted = true;
   musicGate.classList.add("is-hidden");
+  warmImages();
   startAutoPlay();
 }
 
@@ -114,6 +152,8 @@ copyAddress.addEventListener("click", async () => {
 });
 
 preloadImage(firstImage);
+warmAudio();
+setTimeout(warmImages, 800);
 
 function nearestPageIndex() {
   let best = 0;
@@ -157,6 +197,10 @@ function stopAutoPlay() {
 }
 
 function pauseAutoBriefly() {
+  if (!inviteStarted || !musicGate.classList.contains("is-hidden")) {
+    return;
+  }
+
   if (!autoPlay) {
     return;
   }
