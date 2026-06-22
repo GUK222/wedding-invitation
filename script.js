@@ -4,11 +4,13 @@ const startInvite = document.getElementById("startInvite");
 const musicToggle = document.getElementById("musicToggle");
 const copyAddress = document.getElementById("copyAddress");
 const loadingScreen = document.getElementById("loadingScreen");
-const firstImage = document.querySelector(".invite img");
+const loadingText = document.getElementById("loadingText");
+const loadingBar = document.getElementById("loadingBar");
 const autoToggle = document.getElementById("autoToggle");
 const speedToggle = document.getElementById("speedToggle");
 const sheets = [...document.querySelectorAll(".sheet")];
-const warmImageSources = [
+const imageSources = [
+  "assets/final3-page-01.webp?v=11",
   "assets/final3-page-02.webp?v=11",
   "assets/final3-page-03.webp?v=11",
   "assets/final3-page-04.webp?v=11",
@@ -18,6 +20,8 @@ const warmImageSources = [
   "assets/final3-page-08.webp?v=11",
   "assets/final3-page-09.webp?v=11",
 ];
+const warmImageSources = imageSources.slice(1);
+const musicSource = "assets/wedding-music-fast.mp3?v=12";
 
 let autoPlay = true;
 let autoTimer = null;
@@ -25,6 +29,9 @@ let currentPage = 0;
 let userPauseTimer = null;
 let speedIndex = 0;
 let inviteStarted = false;
+let loadedAssets = 0;
+let loadingFinished = false;
+const totalAssets = imageSources.length + 1;
 const speeds = [
   { label: "\uC18D\uB3C4 \uBE60\uB984", delay: 3000 },
   { label: "\uC18D\uB3C4 \uBCF4\uD1B5", delay: 4500 },
@@ -36,29 +43,26 @@ music.preload = "auto";
 music.load();
 
 function hideLoading() {
+  loadingFinished = true;
+  setLoadingProgress(totalAssets);
   loadingScreen.classList.add("is-hidden");
   document.body.classList.remove("is-loading");
 }
 
-function preloadImage(img) {
-  if (!img) {
-    hideLoading();
-    return;
-  }
+function setLoadingProgress(done) {
+  const percent = Math.min(100, Math.round((done / totalAssets) * 100));
+  loadingText.textContent = `청첩장을 준비하는 중 ${percent}%`;
+  loadingBar.style.width = `${percent}%`;
+}
 
-  if (img.complete && img.naturalWidth > 0) {
-    hideLoading();
-    return;
-  }
-
-  img.addEventListener("load", hideLoading, { once: true });
-  img.addEventListener("error", hideLoading, { once: true });
-  setTimeout(hideLoading, 1200);
+function markAssetReady() {
+  loadedAssets = Math.min(totalAssets, loadedAssets + 1);
+  setLoadingProgress(loadedAssets);
 }
 
 async function warmAudio() {
   try {
-    const response = await fetch("assets/wedding-music-fast.mp3?v=11", { cache: "force-cache" });
+    const response = await fetch(musicSource, { cache: "force-cache" });
     const blob = await response.blob();
     if (!music.paused) {
       return;
@@ -69,6 +73,31 @@ async function warmAudio() {
   } catch {
     music.load();
   }
+}
+
+function loadImageAsset(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.decoding = "async";
+    img.onload = img.onerror = () => {
+      markAssetReady();
+      resolve();
+    };
+    img.src = src;
+  });
+}
+
+async function loadAudioAsset() {
+  await warmAudio();
+  markAssetReady();
+}
+
+async function preloadInvitationAssets() {
+  setLoadingProgress(0);
+  const timeout = new Promise((resolve) => setTimeout(resolve, 10000));
+  const assets = Promise.all([...imageSources.map(loadImageAsset), loadAudioAsset()]);
+  await Promise.race([assets, timeout]);
+  hideLoading();
 }
 
 function warmImages(index = 0) {
@@ -128,7 +157,6 @@ startInvite.addEventListener("pointerdown", beginInvite);
 startInvite.addEventListener("touchstart", beginInvite, { passive: false });
 startInvite.addEventListener("click", beginInvite);
 musicGate.addEventListener("click", beginInvite);
-setTimeout(openInvite, 3200);
 
 musicToggle.addEventListener("click", async () => {
   if (music.paused) {
@@ -151,9 +179,7 @@ copyAddress.addEventListener("click", async () => {
   }
 });
 
-preloadImage(firstImage);
-warmAudio();
-setTimeout(warmImages, 800);
+preloadInvitationAssets();
 
 function nearestPageIndex() {
   let best = 0;
