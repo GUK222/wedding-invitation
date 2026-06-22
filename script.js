@@ -9,19 +9,20 @@ const loadingBar = document.getElementById("loadingBar");
 const autoToggle = document.getElementById("autoToggle");
 const speedToggle = document.getElementById("speedToggle");
 const sheets = [...document.querySelectorAll(".sheet")];
+const renderedImages = [...document.querySelectorAll(".sheet img")];
 const imageSources = [
-  "assets/final3-page-01.webp?v=11",
-  "assets/final3-page-02.webp?v=11",
-  "assets/final3-page-03.webp?v=11",
-  "assets/final3-page-04.webp?v=11",
-  "assets/final3-page-05.webp?v=11",
-  "assets/final3-page-06.webp?v=11",
-  "assets/final3-page-07.webp?v=11",
-  "assets/final3-page-08.webp?v=11",
-  "assets/final3-page-09.webp?v=11",
+  "assets/final3-page-01.webp?v=14",
+  "assets/final3-page-02.webp?v=14",
+  "assets/final3-page-03.webp?v=14",
+  "assets/final3-page-04.webp?v=14",
+  "assets/final3-page-05.webp?v=14",
+  "assets/final3-page-06.webp?v=14",
+  "assets/final3-page-07.webp?v=14",
+  "assets/final3-page-08.webp?v=14",
+  "assets/final3-page-09.webp?v=14",
 ];
 const warmImageSources = imageSources.slice(1);
-const musicSource = "assets/wedding-music-fast.mp3?v=12";
+const musicSource = "assets/wedding-music-fast.mp3?v=14";
 
 let autoPlay = true;
 let autoTimer = null;
@@ -29,9 +30,10 @@ let currentPage = 0;
 let userPauseTimer = null;
 let speedIndex = 0;
 let inviteStarted = false;
+let inviteOpening = false;
 let loadedAssets = 0;
 let loadingFinished = false;
-const totalAssets = imageSources.length + 1;
+const totalAssets = imageSources.length + renderedImages.length + 1;
 const speeds = [
   { label: "\uC18D\uB3C4 \uBE60\uB984", delay: 3000 },
   { label: "\uC18D\uB3C4 \uBCF4\uD1B5", delay: 4500 },
@@ -75,6 +77,19 @@ async function warmAudio() {
   }
 }
 
+function resetMusicForGesture() {
+  if (!music.src) {
+    music.src = musicSource;
+  }
+
+  try {
+    music.currentTime = 0;
+  } catch {
+    // Metadata may not be ready in some mobile in-app browsers.
+  }
+  music.load();
+}
+
 function loadImageAsset(src) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -92,11 +107,41 @@ async function loadAudioAsset() {
   markAssetReady();
 }
 
+function decodeRenderedImage(img) {
+  img.loading = "eager";
+  return new Promise((resolve) => {
+    const finish = async () => {
+      try {
+        if (img.decode) {
+          await img.decode();
+        }
+      } catch {
+        // Some mobile WebViews reject decode for cached images that still render normally.
+      }
+      markAssetReady();
+      resolve();
+    };
+
+    if (img.complete && img.naturalWidth > 0) {
+      finish();
+      return;
+    }
+
+    img.addEventListener("load", finish, { once: true });
+    img.addEventListener("error", finish, { once: true });
+  });
+}
+
 async function preloadInvitationAssets() {
   setLoadingProgress(0);
-  const timeout = new Promise((resolve) => setTimeout(resolve, 10000));
-  const assets = Promise.all([...imageSources.map(loadImageAsset), loadAudioAsset()]);
+  const timeout = new Promise((resolve) => setTimeout(resolve, 15000));
+  const assets = Promise.all([
+    ...imageSources.map(loadImageAsset),
+    ...renderedImages.map(decodeRenderedImage),
+    loadAudioAsset(),
+  ]);
   await Promise.race([assets, timeout]);
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   hideLoading();
 }
 
@@ -114,6 +159,7 @@ function warmImages(index = 0) {
 async function playMusic() {
   try {
     music.volume = 0.82;
+    music.muted = false;
     await music.play();
     musicToggle.classList.add("is-playing");
     musicToggle.setAttribute("aria-label", "\uBC30\uACBD \uC74C\uC545 \uC815\uC9C0");
@@ -139,15 +185,22 @@ function openInvite() {
   }
 
   inviteStarted = true;
+  stopAutoPlay();
+  goToPage(0, "auto");
   musicGate.classList.add("is-hidden");
   warmImages();
-  startAutoPlay();
+  setTimeout(startAutoPlay, 8000);
 }
 
-function beginInvite(event) {
+async function beginInvite(event) {
   event?.preventDefault();
   event?.stopPropagation();
+  if (inviteOpening || inviteStarted) {
+    return false;
+  }
 
+  inviteOpening = true;
+  resetMusicForGesture();
   const playAttempt = playMusic();
   openInvite();
   return playAttempt;
@@ -194,9 +247,9 @@ function nearestPageIndex() {
   return best;
 }
 
-function goToPage(index) {
+function goToPage(index, behavior = "smooth") {
   currentPage = (index + sheets.length) % sheets.length;
-  sheets[currentPage].scrollIntoView({ behavior: "smooth", block: "start" });
+  sheets[currentPage].scrollIntoView({ behavior, block: "start" });
 }
 
 function startAutoPlay() {
