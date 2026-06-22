@@ -20,15 +20,21 @@
   <link rel="preload" as="image" href="assets/final3-page-01.webp?v=11" fetchpriority="high" />
   <link rel="preload" as="image" href="assets/final3-page-02.webp?v=11" />
   <link rel="preload" as="image" href="assets/final3-page-03.webp?v=11" />
-  <link rel="preload" as="audio" href="assets/wedding-music-fast.mp3?v=11" type="audio/mpeg" />
+  <link rel="preload" as="audio" href="assets/wedding-music-fast.mp3?v=12" type="audio/mpeg" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <audio id="bgMusic" src="assets/wedding-music-fast.mp3?v=11" loop preload="auto" autoplay></audio>
+  <audio id="bgMusic" src="assets/wedding-music-fast.mp3?v=12" loop preload="auto" autoplay></audio>
 
   <div class="loading-screen" id="loadingScreen" aria-live="polite">
-    <div class="loading-mark"></div>
-    <p>청첩장을 불러오는 중</p>
+    <div class="loading-card">
+      <div class="loading-mark"></div>
+      <strong>잠시만 기다려주세요</strong>
+      <p id="loadingText">청첩장을 준비하는 중 0%</p>
+      <div class="loading-bar" aria-hidden="true">
+        <span id="loadingBar"></span>
+      </div>
+    </div>
   </div>
 
   <div class="music-gate" id="musicGate">
@@ -72,6 +78,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=11"></script>
+  <script src="script.js?v=13"></script>
 </body>
 </html>
