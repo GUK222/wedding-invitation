@@ -47,6 +47,7 @@ const speeds = [
   { label: "\uC18D\uB3C4 \uBCF4\uD1B5", delay: 4500 },
   { label: "\uC18D\uB3C4 \uB290\uB9BC", delay: 6500 },
 ];
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 document.body.classList.add("is-loading");
 music.preload = "auto";
@@ -145,7 +146,7 @@ function renderPetals() {
 }
 
 function startPetals() {
-  if (petalsStarted || !petalCanvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (petalsStarted || !petalCanvas || prefersReducedMotion) {
     return;
   }
 
@@ -171,6 +172,31 @@ function startPetals() {
       renderPetals();
     }
   });
+}
+
+function revealSheet(sheet) {
+  sheet.classList.add("is-visible");
+}
+
+function setupSheetReveal() {
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    sheets.forEach(revealSheet);
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        revealSheet(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.34,
+    rootMargin: "0px 0px -10% 0px",
+  });
+
+  sheets.forEach((sheet) => observer.observe(sheet));
 }
 
 function hideLoading() {
@@ -293,6 +319,8 @@ function openInvite() {
 
   inviteStarted = true;
   document.body.classList.add("invite-opened");
+  setupSheetReveal();
+  revealSheet(sheets[0]);
   startPetals();
   goToPage(0, "auto");
   musicGate.classList.add("is-hidden");
@@ -363,6 +391,7 @@ function updateActivePageState(index = nearestPageIndex()) {
 
 function goToPage(index, behavior = "smooth") {
   currentPage = (index + sheets.length) % sheets.length;
+  revealSheet(sheets[currentPage]);
   sheets[currentPage].scrollIntoView({ behavior, block: "start" });
   updateActivePageState(currentPage);
 }
