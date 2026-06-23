@@ -22,7 +22,7 @@
   <link rel="preload" as="image" href="assets/final3-page-03.webp?v=20" />
   <link rel="preload" as="image" href="assets/petal-v1.png" />
   <link rel="preload" as="audio" href="assets/wedding-music-fast.mp3?v=20" type="audio/mpeg" />
-  <link rel="stylesheet" href="styles-v21.css?v=25" />
+  <link rel="stylesheet" href="styles-v21.css?v=26" />
 </head>
 <body>
   <audio id="bgMusic" src="assets/wedding-music-fast.mp3?v=20" loop preload="auto" playsinline></audio>
@@ -69,23 +69,10 @@
     <section class="sheet"><picture><source srcset="assets/final3-page-05.webp?v=20" type="image/webp" /><img src="assets/final3-page-05.png?v=20" width="1085" height="1450" loading="eager" decoding="async" alt="Invitation page 5" /></picture></section>
     <section class="sheet"><picture><source srcset="assets/final3-page-06.webp?v=20" type="image/webp" /><img src="assets/final3-page-06.png?v=20" width="1092" height="1440" loading="eager" decoding="async" alt="Invitation page 6" /></picture></section>
     <section class="sheet"><picture><source srcset="assets/final3-page-07.webp?v=20" type="image/webp" /><img src="assets/final3-page-07.png?v=20" width="1086" height="1448" loading="eager" decoding="async" alt="Invitation page 7" /></picture></section>
-    <section class="sheet"><picture><source srcset="assets/final3-page-08.webp?v=20" type="image/webp" /><img src="assets/final3-page-08.png?v=20" width="1086" height="1449" loading="eager" decoding="async" alt="Invitation page 8" /></picture></section>
-    <section class="sheet countdown-sheet" aria-label="Wedding day countdown">
-      <div class="countdown-card">
-        <p class="countdown-kicker">WEDDING DAY</p>
-        <h2>2026.08.23</h2>
-        <p class="countdown-time">일요일 오전 11시</p>
-        <div class="countdown-divider" aria-hidden="true"><span>♥</span></div>
-        <div class="countdown-calendar" aria-label="2026년 8월 달력">
-          <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
-          <i></i><i></i><i></i><i></i><i></i><i></i><b>1</b>
-          <b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b>
-          <b>9</b><b>10</b><b>11</b><b>12</b><b>13</b><b>14</b><b>15</b>
-          <b>16</b><b>17</b><b>18</b><b>19</b><b>20</b><b>21</b><b>22</b>
-          <b class="wedding-date">23</b><b>24</b><b>25</b><b>26</b><b>27</b><b>28</b><b>29</b>
-          <b>30</b><b>31</b>
-        </div>
-        <div class="countdown-timer" aria-live="polite">
+    <section class="sheet calendar-sheet">
+      <picture><source srcset="assets/final3-page-08.webp?v=20" type="image/webp" /><img src="assets/final3-page-08.png?v=20" width="1086" height="1449" loading="eager" decoding="async" alt="Invitation page 8" /></picture>
+      <div class="countdown-overlay" aria-live="polite">
+        <div class="countdown-timer">
           <div><strong id="countDays">0</strong><span>Days</span></div>
           <div><strong id="countHours">0</strong><span>Hours</span></div>
           <div><strong id="countMinutes">0</strong><span>Minutes</span></div>
@@ -104,6 +91,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=25"></script>
+  <script src="script.js?v=26"></script>
 </body>
 </html>
