@@ -110,17 +110,6 @@ body.invite-opened .sheet.is-visible picture {
   transform: translateY(0);
 }
 
-body.invite-opened .countdown-card {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 760ms ease, transform 760ms ease;
-}
-
-body.invite-opened .sheet.is-visible .countdown-card {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .sheet img {
   display: block;
   width: 100%;
@@ -133,119 +122,28 @@ body.invite-opened .sheet.is-visible .countdown-card {
   padding: 0;
 }
 
-.countdown-sheet {
-  padding: 20px 18px 74px;
+.calendar-sheet {
+  position: relative;
 }
 
-.countdown-card {
-  width: min(100%, 430px);
-  min-height: calc(100svh - 94px);
+.countdown-overlay {
+  position: absolute;
+  left: 50%;
+  bottom: calc(10.7% + env(safe-area-inset-bottom));
+  z-index: 14;
+  width: min(78%, 360px);
+  transform: translateX(-50%);
   display: grid;
-  align-content: center;
   justify-items: center;
   gap: 10px;
-  padding: 26px 22px;
-  border: 1px solid rgba(184, 154, 98, 0.22);
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255, 230, 226, 0.48), transparent 32%),
-    rgba(255, 252, 248, 0.84);
-  box-shadow: 0 22px 58px rgba(88, 70, 48, 0.1);
-}
-
-.countdown-kicker {
-  margin: 0;
-  color: #686865;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 25px;
-  font-style: italic;
-  letter-spacing: 0.02em;
-}
-
-.countdown-card h2 {
-  margin: 0;
-  color: var(--gold);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 38px;
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-.countdown-time,
-.countdown-message {
-  margin: 0;
-  color: rgba(52, 52, 47, 0.72);
-  font-size: 15px;
-  line-height: 1.6;
-  text-align: center;
-}
-
-.countdown-divider {
-  width: min(190px, 62%);
-  height: 16px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 10px;
-  color: var(--gold);
-}
-
-.countdown-divider::before,
-.countdown-divider::after {
-  content: "";
-  height: 1px;
-  background: rgba(184, 154, 98, 0.44);
-}
-
-.countdown-divider span {
-  color: var(--gold);
-  font-size: 11px;
-  line-height: 1;
-}
-
-.countdown-calendar {
-  width: min(100%, 330px);
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 3px 0;
-  padding: 14px 0 8px;
-  border-top: 1px solid rgba(184, 154, 98, 0.2);
-  border-bottom: 1px solid rgba(184, 154, 98, 0.16);
-}
-
-.countdown-calendar span,
-.countdown-calendar b,
-.countdown-calendar i {
-  width: 34px;
-  height: 27px;
-  display: grid;
-  place-items: center;
-  justify-self: center;
-  color: rgba(52, 52, 47, 0.62);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-}
-
-.countdown-calendar span {
-  height: 21px;
-  color: rgba(95, 118, 95, 0.82);
-  font-size: 10px;
-}
-
-.countdown-calendar .wedding-date {
-  border-radius: 50%;
-  background: rgba(255, 213, 205, 0.9);
-  color: var(--green-dark);
+  pointer-events: none;
 }
 
 .countdown-timer {
-  width: min(100%, 338px);
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 4px;
 }
 
 .countdown-timer div {
@@ -253,10 +151,11 @@ body.invite-opened .sheet.is-visible .countdown-card {
   display: grid;
   gap: 3px;
   justify-items: center;
-  padding: 10px 4px;
+  padding: 9px 4px 7px;
   border: 1px solid rgba(184, 154, 98, 0.2);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.64);
+  border-radius: 10px;
+  background: rgba(255, 253, 249, 0.78);
+  box-shadow: 0 8px 22px rgba(88, 70, 48, 0.05);
 }
 
 .countdown-timer strong {
@@ -272,6 +171,14 @@ body.invite-opened .sheet.is-visible .countdown-card {
   font-size: 10px;
   letter-spacing: 0;
   white-space: nowrap;
+}
+
+.countdown-message {
+  margin: 0;
+  color: rgba(52, 52, 47, 0.66);
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
 }
 
 .map-actions {
@@ -546,12 +453,6 @@ body.is-location-active .speed-toggle {
 
 @media print, (prefers-reduced-motion: reduce) {
   body.invite-opened .sheet picture {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  body.invite-opened .countdown-card {
     opacity: 1;
     transform: none;
     transition: none;
