@@ -64,9 +64,9 @@ class Petal {
   }
 
   initialize() {
-    this.width = 25 + Math.random() * 15;
-    this.height = 20 + Math.random() * 10;
-    this.opacity = this.width / 80;
+    this.width = 32 + Math.random() * 18;
+    this.height = 26 + Math.random() * 12;
+    this.opacity = 0.48 + Math.random() * 0.18;
     this.flip = Math.random();
     this.xSpeed = 0.6 + Math.random() * 0.8;
     this.ySpeed = 0.4 + Math.random() * 0.4;
@@ -108,7 +108,7 @@ class Petal {
 }
 
 function petalCount() {
-  return Math.min(24, Math.max(8, Math.floor((window.innerWidth * window.innerHeight) / 30000)));
+  return Math.min(32, Math.max(12, Math.floor((window.innerWidth * window.innerHeight) / 23000)));
 }
 
 function resizePetalCanvas() {
