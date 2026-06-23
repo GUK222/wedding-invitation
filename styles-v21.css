@@ -41,6 +41,20 @@ body:not(.is-ready) .speed-toggle {
   visibility: hidden;
 }
 
+.petal-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 12;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  pointer-events: none;
+}
+
+body:not(.invite-opened) .petal-canvas {
+  visibility: hidden;
+}
+
 button,
 a {
   font: inherit;
@@ -364,5 +378,11 @@ body.is-location-active .speed-toggle {
   .map-actions button {
     min-height: 40px;
     font-size: 12px;
+  }
+}
+
+@media print, (prefers-reduced-motion: reduce) {
+  .petal-canvas {
+    display: none;
   }
 }
