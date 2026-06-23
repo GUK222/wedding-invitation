@@ -9,6 +9,11 @@ const loadingBar = document.getElementById("loadingBar");
 const autoToggle = document.getElementById("autoToggle");
 const speedToggle = document.getElementById("speedToggle");
 const petalCanvas = document.getElementById("petalCanvas");
+const countDays = document.getElementById("countDays");
+const countHours = document.getElementById("countHours");
+const countMinutes = document.getElementById("countMinutes");
+const countSeconds = document.getElementById("countSeconds");
+const countMessage = document.getElementById("countMessage");
 const sheets = [...document.querySelectorAll(".sheet")];
 const renderedImages = [...document.querySelectorAll(".sheet img")];
 const imageSources = [
@@ -48,6 +53,7 @@ const speeds = [
   { label: "\uC18D\uB3C4 \uB290\uB9BC", delay: 6500 },
 ];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const weddingDate = new Date("2026-08-23T11:00:00+09:00");
 
 document.body.classList.add("is-loading");
 music.preload = "auto";
@@ -197,6 +203,28 @@ function setupSheetReveal() {
   });
 
   sheets.forEach((sheet) => observer.observe(sheet));
+}
+
+function updateCountdown() {
+  if (!countDays || !countHours || !countMinutes || !countSeconds) {
+    return;
+  }
+
+  const diff = Math.max(0, weddingDate.getTime() - Date.now());
+  const totalSeconds = Math.floor(diff / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  countDays.textContent = days;
+  countHours.textContent = String(hours).padStart(2, "0");
+  countMinutes.textContent = String(minutes).padStart(2, "0");
+  countSeconds.textContent = String(seconds).padStart(2, "0");
+
+  if (countMessage && diff === 0) {
+    countMessage.textContent = "\uACBD\uAD6D \u00B7 \uBBF8\uC601\uC758 \uACB0\uD63C\uC2DD \uB0A0\uC785\uB2C8\uB2E4";
+  }
 }
 
 function hideLoading() {
@@ -370,6 +398,8 @@ copyAddress.addEventListener("click", async () => {
   }
 });
 
+updateCountdown();
+setInterval(updateCountdown, 1000);
 preloadInvitationAssets();
 
 function nearestPageIndex() {
