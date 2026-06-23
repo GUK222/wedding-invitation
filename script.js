@@ -8,6 +8,7 @@ const loadingText = document.getElementById("loadingText");
 const loadingBar = document.getElementById("loadingBar");
 const autoToggle = document.getElementById("autoToggle");
 const speedToggle = document.getElementById("speedToggle");
+const petalCanvas = document.getElementById("petalCanvas");
 const sheets = [...document.querySelectorAll(".sheet")];
 const renderedImages = [...document.querySelectorAll(".sheet img")];
 const imageSources = [
@@ -33,6 +34,12 @@ let inviteStarted = false;
 let inviteOpening = false;
 let loadedAssets = 0;
 let loadingFinished = false;
+let petalsStarted = false;
+let petalAnimationFrame = 0;
+let petalResizeTimer = 0;
+let petalContext = null;
+let petalImage = null;
+let petals = [];
 const totalAssets = renderedImages.length + 1;
 const firstPageDelay = 1800;
 const speeds = [
@@ -44,6 +51,127 @@ const speeds = [
 document.body.classList.add("is-loading");
 music.preload = "auto";
 music.load();
+
+class Petal {
+  constructor(canvas, context, image) {
+    this.canvas = canvas;
+    this.context = context;
+    this.image = image;
+    this.x = Math.random() * canvas.clientWidth;
+    this.y = Math.random() * canvas.clientHeight * 2 - canvas.clientHeight;
+    this.initialize();
+  }
+
+  initialize() {
+    this.width = 25 + Math.random() * 15;
+    this.height = 20 + Math.random() * 10;
+    this.opacity = this.width / 80;
+    this.flip = Math.random();
+    this.xSpeed = 0.6 + Math.random() * 0.8;
+    this.ySpeed = 0.4 + Math.random() * 0.4;
+    this.flipSpeed = Math.random() * 0.02;
+  }
+
+  draw() {
+    const width = this.canvas.clientWidth;
+    const height = this.canvas.clientHeight;
+
+    if (this.y > height || this.x > width) {
+      this.initialize();
+      const rand = Math.random() * (width + height);
+      if (rand > width) {
+        this.x = 0;
+        this.y = rand - width;
+      } else {
+        this.x = rand;
+        this.y = 0;
+      }
+    }
+
+    this.context.globalAlpha = this.opacity;
+    this.context.drawImage(
+      this.image,
+      this.x,
+      this.y,
+      this.width * (0.6 + Math.abs(Math.cos(this.flip)) / 3),
+      this.height * (0.8 + Math.abs(Math.sin(this.flip)) / 5),
+    );
+  }
+
+  animate() {
+    this.x += this.xSpeed;
+    this.y += this.ySpeed;
+    this.flip += this.flipSpeed;
+    this.draw();
+  }
+}
+
+function petalCount() {
+  return Math.min(24, Math.max(8, Math.floor((window.innerWidth * window.innerHeight) / 30000)));
+}
+
+function resizePetalCanvas() {
+  if (!petalCanvas || !petalContext) {
+    return;
+  }
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  petalCanvas.width = Math.round(width * dpr);
+  petalCanvas.height = Math.round(height * dpr);
+  petalCanvas.style.width = `${width}px`;
+  petalCanvas.style.height = `${height}px`;
+  petalContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const nextCount = petalCount();
+  if (petals.length > nextCount) {
+    petals.length = nextCount;
+  }
+  while (petals.length < nextCount && petalImage) {
+    petals.push(new Petal(petalCanvas, petalContext, petalImage));
+  }
+}
+
+function renderPetals() {
+  if (!petalCanvas || !petalContext || document.hidden) {
+    return;
+  }
+
+  petalContext.clearRect(0, 0, petalCanvas.clientWidth, petalCanvas.clientHeight);
+  petals.forEach((petal) => petal.animate());
+  petalContext.globalAlpha = 1;
+  petalAnimationFrame = requestAnimationFrame(renderPetals);
+}
+
+function startPetals() {
+  if (petalsStarted || !petalCanvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  petalsStarted = true;
+  petalContext = petalCanvas.getContext("2d");
+  petalImage = new Image();
+  petalImage.decoding = "async";
+  petalImage.onload = () => {
+    resizePetalCanvas();
+    renderPetals();
+  };
+  petalImage.src = "assets/petal-v1.png";
+
+  window.addEventListener("resize", () => {
+    clearTimeout(petalResizeTimer);
+    petalResizeTimer = setTimeout(resizePetalCanvas, 120);
+  }, { passive: true });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      cancelAnimationFrame(petalAnimationFrame);
+    } else if (petalsStarted) {
+      renderPetals();
+    }
+  });
+}
 
 function hideLoading() {
   if (loadingFinished) {
@@ -164,6 +292,8 @@ function openInvite() {
   }
 
   inviteStarted = true;
+  document.body.classList.add("invite-opened");
+  startPetals();
   goToPage(0, "auto");
   musicGate.classList.add("is-hidden");
   warmImages();
