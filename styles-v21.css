@@ -99,6 +99,17 @@ button {
   height: 100%;
 }
 
+body.invite-opened .sheet picture {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 760ms ease, transform 760ms ease;
+}
+
+body.invite-opened .sheet.is-visible picture {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .sheet img {
   display: block;
   width: 100%;
@@ -382,6 +393,12 @@ body.is-location-active .speed-toggle {
 }
 
 @media print, (prefers-reduced-motion: reduce) {
+  body.invite-opened .sheet picture {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   .petal-canvas {
     display: none;
   }
