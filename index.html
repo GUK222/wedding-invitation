@@ -20,11 +20,13 @@
   <link rel="preload" as="image" href="assets/final3-page-01.webp?v=20" fetchpriority="high" />
   <link rel="preload" as="image" href="assets/final3-page-02.webp?v=20" />
   <link rel="preload" as="image" href="assets/final3-page-03.webp?v=20" />
+  <link rel="preload" as="image" href="assets/petal-v1.png" />
   <link rel="preload" as="audio" href="assets/wedding-music-fast.mp3?v=20" type="audio/mpeg" />
-  <link rel="stylesheet" href="styles-v21.css?v=21" />
+  <link rel="stylesheet" href="styles-v21.css?v=22" />
 </head>
 <body>
   <audio id="bgMusic" src="assets/wedding-music-fast.mp3?v=20" loop preload="auto" playsinline></audio>
+  <canvas class="petal-canvas" id="petalCanvas" aria-hidden="true"></canvas>
 
   <div class="loading-screen" id="loadingScreen" aria-live="polite">
     <div class="loading-card">
@@ -78,7 +80,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=21"></script>
+  <script src="script.js?v=22"></script>
 </body>
 </html>
-
