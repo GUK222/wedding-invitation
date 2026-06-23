@@ -28,7 +28,6 @@ const imageSources = [
   "assets/final3-page-09.webp?v=20",
 ];
 const warmImageSources = imageSources.slice(1);
-const musicSource = "assets/wedding-music-fast.mp3?v=20";
 
 let autoPlay = true;
 let autoTimer = null;
@@ -45,7 +44,7 @@ let petalResizeTimer = 0;
 let petalContext = null;
 let petalImage = null;
 let petals = [];
-const totalAssets = renderedImages.length + 1;
+const totalAssets = renderedImages.length;
 const firstPageDelay = 1800;
 const speeds = [
   { label: "\uC18D\uB3C4 \uBE60\uB984", delay: 3000 },
@@ -253,24 +252,6 @@ function markAssetReady() {
   setLoadingProgress(loadedAssets);
 }
 
-function loadAudioAsset() {
-  return fetch(musicSource, { cache: "force-cache" })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Music failed to load");
-      }
-      return response.blob();
-    })
-    .then((blob) => {
-      music.src = URL.createObjectURL(blob);
-      music.load();
-      markAssetReady();
-    })
-    .catch(() => {
-      markAssetReady();
-    });
-}
-
 function decodeRenderedImage(img) {
   img.loading = "eager";
   return new Promise((resolve) => {
@@ -298,10 +279,7 @@ function decodeRenderedImage(img) {
 
 async function preloadInvitationAssets() {
   setLoadingProgress(0);
-  await Promise.all([
-    ...renderedImages.map(decodeRenderedImage),
-    loadAudioAsset(),
-  ]);
+  await Promise.all(renderedImages.map(decodeRenderedImage));
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   hideLoading();
 }
