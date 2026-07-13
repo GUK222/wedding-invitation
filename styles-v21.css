@@ -213,6 +213,237 @@ body.invite-opened .sheet.is-visible picture {
   appearance: none;
 }
 
+.info-sheet {
+  padding: clamp(30px, 5.5svh, 58px) 24px calc(76px + env(safe-area-inset-bottom));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 24%, transparent 76%, rgba(184, 154, 98, 0.04)),
+    var(--paper);
+}
+
+.info-inner {
+  width: min(100%, 420px);
+  margin: auto;
+  text-align: center;
+}
+
+.info-kicker {
+  margin: 0 0 9px;
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+}
+
+.info-inner h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", "Apple SD Gothic Neo", serif;
+  font-size: clamp(25px, 7vw, 32px);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.gold-divider {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 118px;
+  height: 24px;
+  margin: 12px auto 20px;
+}
+
+.gold-divider::before,
+.gold-divider::after {
+  content: "";
+  position: absolute;
+  width: 48px;
+  height: 1px;
+  background: rgba(184, 154, 98, 0.48);
+}
+
+.gold-divider::before {
+  transform: translateX(-34px);
+}
+
+.gold-divider::after {
+  transform: translateX(34px);
+}
+
+.gold-divider span {
+  width: 7px;
+  height: 7px;
+  transform: rotate(45deg);
+  background: var(--gold);
+}
+
+.family-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  margin: 9px 0;
+  color: rgba(52, 52, 47, 0.76);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.family-line strong {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.parents-group {
+  margin-top: clamp(18px, 3.2svh, 28px);
+  border-top: 1px solid rgba(184, 154, 98, 0.28);
+}
+
+.parents-group h3 {
+  margin: -10px auto 4px;
+  width: max-content;
+  padding: 0 14px;
+  background: var(--paper);
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.parent-row {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid rgba(184, 154, 98, 0.16);
+}
+
+.parent-row p {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  text-align: left;
+}
+
+.parent-row small {
+  color: rgba(52, 52, 47, 0.56);
+  font-size: 12px;
+}
+
+.parent-row strong {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.parent-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.parent-actions a,
+.copy-account {
+  min-width: 52px;
+  min-height: 34px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(95, 118, 95, 0.28);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.account-intro {
+  margin: 0 0 clamp(22px, 4svh, 34px);
+  color: rgba(52, 52, 47, 0.7);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.account-list {
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.account-list details {
+  overflow: hidden;
+  border: 1px solid rgba(184, 154, 98, 0.24);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.account-list summary {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.account-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.account-list summary span {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--green-dark);
+  border-bottom: 1.5px solid var(--green-dark);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 180ms ease;
+}
+
+.account-list details[open] summary span {
+  transform: rotate(225deg) translate(-2px, -2px);
+}
+
+.account-row {
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(184, 154, 98, 0.18);
+}
+
+.account-row div {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.account-row strong {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.account-row small {
+  color: rgba(52, 52, 47, 0.58);
+  font-size: 12px;
+}
+
+.copy-account {
+  flex: 0 0 auto;
+  appearance: none;
+}
+
+.account-note {
+  margin: 16px 0 0;
+  color: rgba(52, 52, 47, 0.46);
+  font-size: 11px;
+}
+
 .music-gate {
   position: fixed;
   inset: 0;
