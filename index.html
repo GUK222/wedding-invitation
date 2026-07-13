@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -22,7 +22,7 @@
   <link rel="preload" as="image" href="assets/final3-page-03.webp?v=20" />
   <link rel="preload" as="image" href="assets/petal-v1.png" />
   <link rel="preload" as="audio" href="assets/wedding-music-fast.mp3?v=20" type="audio/mpeg" />
-  <link rel="stylesheet" href="styles-v21.css?v=26" />
+  <link rel="stylesheet" href="styles-v21.css?v=28" />
 </head>
 <body>
   <audio id="bgMusic" src="assets/wedding-music-fast.mp3?v=20" loop preload="auto" playsinline></audio>
@@ -89,8 +89,94 @@
         <button type="button" id="copyAddress">주소 복사</button>
       </div>
     </section>
+    <section class="sheet info-sheet family-sheet" aria-labelledby="familyTitle">
+      <div class="info-inner">
+        <p class="info-kicker">WITH OUR FAMILIES</p>
+        <h2 id="familyTitle">혼주에게 연락하기</h2>
+        <div class="gold-divider" aria-hidden="true"><span></span></div>
+
+        <div class="family-line">
+          <span>전영호 · 노봉옥의 아들</span>
+          <strong>경국</strong>
+        </div>
+        <div class="family-line">
+          <span>윤희원 · 정춘화의 딸</span>
+          <strong>미영</strong>
+        </div>
+
+        <div class="parents-group">
+          <h3>신랑측 혼주</h3>
+          <div class="parent-row">
+            <p><small>아버지</small><strong>전영호</strong></p>
+            <div class="parent-actions">
+              <a href="tel:01036702987">전화</a>
+              <a href="sms:01036702987">문자</a>
+            </div>
+          </div>
+          <div class="parent-row">
+            <p><small>어머니</small><strong>노봉옥</strong></p>
+            <div class="parent-actions">
+              <a href="tel:01035052987">전화</a>
+              <a href="sms:01035052987">문자</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="parents-group">
+          <h3>신부측 혼주</h3>
+          <div class="parent-row">
+            <p><small>아버지</small><strong>윤희원</strong></p>
+            <div class="parent-actions">
+              <a href="tel:01022574593">전화</a>
+              <a href="sms:01022574593">문자</a>
+            </div>
+          </div>
+          <div class="parent-row">
+            <p><small>어머니</small><strong>정춘화</strong></p>
+            <div class="parent-actions">
+              <a href="tel:01038251973">전화</a>
+              <a href="sms:01038251973">문자</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet info-sheet account-sheet" aria-labelledby="accountTitle">
+      <div class="info-inner account-inner">
+        <p class="info-kicker">WITH GRATITUDE</p>
+        <h2 id="accountTitle">마음을 전하는 곳</h2>
+        <div class="gold-divider" aria-hidden="true"><span></span></div>
+        <p class="account-intro">축하의 마음을 전해주시는<br />모든 분들께 깊이 감사드립니다.</p>
+
+        <div class="account-list">
+          <details open>
+            <summary>신랑측 계좌번호 <span aria-hidden="true"></span></summary>
+            <div class="account-row">
+              <div>
+                <strong>농협 09112352544</strong>
+                <small>예금주 LU FENGYU</small>
+              </div>
+              <button type="button" class="copy-account" data-account="09112352544">복사</button>
+            </div>
+          </details>
+
+          <details>
+            <summary>신부측 계좌번호 <span aria-hidden="true"></span></summary>
+            <div class="account-row">
+              <div>
+                <strong>IBK기업은행 010-3825-1973</strong>
+                <small>예금주 정춘화</small>
+              </div>
+              <button type="button" class="copy-account" data-account="01038251973">복사</button>
+            </div>
+          </details>
+        </div>
+        <p class="account-note">복사 버튼을 누르면 계좌번호가 저장됩니다.</p>
+      </div>
+    </section>
   </main>
 
-  <script src="script.js?v=27"></script>
+  <script src="script.js?v=28"></script>
 </body>
 </html>

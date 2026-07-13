@@ -1,4 +1,4 @@
-﻿const music = document.getElementById("bgMusic");
+const music = document.getElementById("bgMusic");
 const musicGate = document.getElementById("musicGate");
 const startInvite = document.getElementById("startInvite");
 const musicToggle = document.getElementById("musicToggle");
@@ -14,6 +14,7 @@ const countHours = document.getElementById("countHours");
 const countMinutes = document.getElementById("countMinutes");
 const countSeconds = document.getElementById("countSeconds");
 const countMessage = document.getElementById("countMessage");
+const accountCopyButtons = [...document.querySelectorAll(".copy-account")];
 const sheets = [...document.querySelectorAll(".sheet")];
 const renderedImages = [...document.querySelectorAll(".sheet img")];
 const imageSources = [
@@ -376,6 +377,27 @@ copyAddress.addEventListener("click", async () => {
   }
 });
 
+accountCopyButtons.forEach((button) => {
+  button.addEventListener("click", async () => {
+    const account = button.dataset.account;
+    if (!account) {
+      return;
+    }
+
+    const originalLabel = button.textContent;
+    try {
+      await navigator.clipboard.writeText(account);
+      button.textContent = "복사 완료";
+    } catch {
+      button.textContent = account;
+    }
+
+    setTimeout(() => {
+      button.textContent = originalLabel;
+    }, 1400);
+  });
+});
+
 updateCountdown();
 setInterval(updateCountdown, 1000);
 preloadInvitationAssets();
@@ -394,7 +416,7 @@ function nearestPageIndex() {
 }
 
 function updateActivePageState(index = nearestPageIndex()) {
-  document.body.classList.toggle("is-location-active", index === sheets.length - 1);
+  document.body.classList.toggle("is-location-active", sheets[index]?.classList.contains("location-sheet"));
 }
 
 function goToPage(index, behavior = "smooth") {
